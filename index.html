@@ -1,0 +1,33 @@
+
+<html style="overflow:hidden;">
+<head>
+<title>ChatCloud</title>
+<link rel="shortcut icon" href="favicon.ico"/>
+<meta name="viewport" content="width=device-width, height=device-width initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
+<script>
+var count = 1;
+function tally(id) {
+  id.innerHTML = count++;
+}
+</script>
+<style>
+::selection {
+  background: black;
+}
+::-moz-selection {
+  background: black;
+}
+body {
+  background-color:black;
+  color:white;
+  font:148px Fredoka One;
+  text-align:center;
+  padding:10px 20% 10px 20%
+  overflow:hidden;
+  text-align:center;
+}
+</style>
+</head>
+<body onClick="tally(this)" style="">0</body>
+</html>

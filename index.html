@@ -17,8 +17,8 @@ function reset() {
   document.getElementById("tally").innerHTML = count;
 }
 window.onload = function () {
-  document.getElementById("tally").style.fontSize = document.body.clientWidth * .25 + "px";
-  document.getElementById("reset").style.fontSize = document.body.clientWidth * .15;
+  document.getElementById("tally").style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .15;
+  document.getElementById("reset").style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .05;
   document.getElementById("reset").style.height = document.getElementById("reset").style.fontSize;
 }
 </script>

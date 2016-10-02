@@ -8,8 +8,8 @@
 <link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 <script>
 var count = 0;
-function tally(id) {
-  id.innerHTML = ++count;
+function tally() {
+  document.getElementById("tally").innerHTML = ++count;
 }
 
 function reset() {
@@ -43,19 +43,21 @@ body {
   padding:0px;
   margin:0px;
   border-top:5px solid white;
+  z-index:2;
 }
 #tally {
   position:absolute;
-  height:150px;
+  height:100%;
   font-size:150px;
   width:100%;
   padding:0px;
   margin:0px;
+  z-index:1;
 }
 </style>
 </head>
-<body" style="">
-<div id="tally" onClick="tally(this)">0</div>
+<body>
+<div id="tally" onClick="tally()">0</div>
 <div id="reset" onClick="reset()">Reset</div>
 </body>
 </html>

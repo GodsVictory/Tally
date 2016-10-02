@@ -6,9 +6,14 @@
 <meta name="viewport" content="width=device-width, height=device-width initial-scale=1">
 <link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 <script>
-var count = 1;
+var count = 0;
 function tally(id) {
-  id.innerHTML = count++;
+  id.innerHTML = ++count;
+}
+
+function reset() {
+  count = 0;
+  document.getElementById("tally").innerHTML = count;
 }
 </script>
 <style>
@@ -27,7 +32,23 @@ body {
   overflow:hidden;
   text-align:center;
 }
+#reset {
+  height:20%;
+  width:100%;
+  padding:0px;
+  margin:0px;
+}
+#tally {
+  height:80%;
+  border-bottom:5px solid white;
+  width:100%;
+  padding:0px;
+  margin:0px;
+}
 </style>
 </head>
-<body onClick="tally(this)" style="">0</body>
+<body" style="">
+<div id="tally" onClick="tally(this)">0</div>
+<div id="reset" onClick="reset()">Reset</div>
+</body>
 </html>

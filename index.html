@@ -8,18 +8,120 @@
 <link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 <script>
 var count = 0;
-function tally() {
-  document.getElementById("tally").innerHTML = ++count;
+var min = 0;
+var sec = 0;
+var setMin = 0;
+var setSec = 0;
+var timer = false;
+var blink = false;
+
+function counter() {
+  document.getElementById("counter").innerHTML = ++count;
 }
 
 function reset() {
   count = 0;
-  document.getElementById("tally").innerHTML = count;
+  document.getElementById("counter").innerHTML = count;
 }
+
+function minute() {
+  if (!timer) {
+    document.getElementById("minute").innerHTML = ++min;
+    setMin = min;
+  }
+}
+
+function second() {
+  if (!timer) {
+    document.getElementById("second").innerHTML = pad(++sec, 2);
+    setSec = sec;
+  }
+}
+
+function startTimer() {
+  if (sec + min > 0)
+    timer = setInterval(function () {
+      if (sec != 0)
+        document.getElementById("second").innerHTML = pad(--sec, 2);
+      else
+        if (min != 0) {
+          document.getElementById("minute").innerHTML = --min;
+          sec = 59;
+          document.getElementById("second").innerHTML = sec;
+        } else {
+          clearInterval(timer);
+          timer = false;
+          document.getElementById("time").style.visibility = "hidden";
+          setTimeout(function () {document.getElementById("time").style.visibility = "visible"},500);
+          blink = setInterval(function () {
+            document.getElementById("time").style.visibility = "hidden";
+            setTimeout(function () {document.getElementById("time").style.visibility = "visible"},500);
+          }, 1000);
+        }
+    }, 1000);
+}
+
+function resetTimer() {
+  if (timer) {
+    clearInterval(timer);
+    timer = false;
+  }
+  min = setMin;
+  sec = setSec;
+  document.getElementById("minute").innerHTML = min;
+  document.getElementById("second").innerHTML = pad(sec, 2);
+  if (blink) {
+    clearInterval(blink);
+    blink = false;
+  }
+}
+
+function clearTimer() {
+  if (timer) {
+    clearInterval(timer);
+    timer = false;
+  }
+  min = 0;
+  sec = 0;
+  setMin = 0;
+  setSec = 0;
+  document.getElementById("minute").innerHTML = 0;
+  document.getElementById("second").innerHTML = "00";
+  if (blink) {
+    clearInterval(blink);
+    blink = false;
+  }
+}
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
 window.onload = function () {
-  document.getElementById("tally").style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .15;
-  document.getElementById("reset").style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .05;
-  document.getElementById("reset").style.height = document.getElementById("reset").style.fontSize;
+  var text = document.getElementsByClassName('text');
+  for (var i = 0; i < text.length; ++i)
+    text[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .025;
+    
+  var number = document.getElementsByClassName('number');
+  for (var i = 0; i < number.length; ++i) {
+    number[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .15;
+    number[i].style.lineHeight = document.body.clientHeight / 2 + "px";
+  }
+}
+
+function resize() {
+  if ( document.readyState !== 'complete' ) return;
+  var text = document.getElementsByClassName('text');
+  for (var i = 0; i < text.length; ++i)
+    text[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .025;
+    
+  var number = document.getElementsByClassName('number');
+  for (var i = 0; i < number.length; ++i) {
+    number[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .15;
+    number[i].style.lineHeight = document.body.clientHeight / 2 + "px";
+  }
 }
 </script>
 <style>
@@ -36,30 +138,43 @@ body {
   color:white;
   font-family:Fredoka One;
   text-align:center;
-  padding:10px 20% 10px 20%
-  text-align:center;
-}
-#reset {
-  position:absolute;
-  bottom:20px;
-  width:100%;
   padding:0px;
   margin:0px;
-  border-top:5px solid white;
-  z-index:2;
+  text-align:center;
+}
+p {
+  padding:0px;
+  margin:0px;
 }
 #tally {
   position:absolute;
-  height:100%;
   width:100%;
-  padding:0px;
-  margin:0px;
-  z-index:1;
+  height:50%;
+  bottom:0px;
+}
+#timer {
+  position:absolute;
+  width:100%;
+  height:50%;
+}
+.number {
+}
+.text {
+  position:absolute;
+  bottom:0px;
+  width:100%;
 }
 </style>
 </head>
-<body>
-<div id="tally" onClick="tally()">0</div>
-<div id="reset" onClick="reset()">Reset</div>
+<body onresize="resize()">
+<div id="timer">
+  <div id="time" class="number"><span id="minute" onClick="minute()">0</span>:<span id="second" onClick="second()">00</span></div>
+  <div class="text"><span id="start" onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="resetTimer" onClick="resetTimer()">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="clear" onClick="clearTimer()">Clear</span></div>
+</div>
+<hr style="position:absolute;line-height:0;top:50%;width:100%;" />
+<div id="tally">
+  <div id="counter" onClick="counter()" class="number">0</div>
+  <div id="reset" onClick="reset()" class="text">Reset</div>
+</div>
 </body>
 </html>

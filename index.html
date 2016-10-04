@@ -12,6 +12,7 @@ var sec = 0;
 var setSec = 0;
 var timer = false;
 var blink = false;
+var showTimer = true;
 
 function counter() {
   document.getElementById("counter").innerHTML = ++count;
@@ -51,9 +52,10 @@ function startTimer() {
       if (sec != 0) {
         sec--;
         setTime();
-      } else {
-        timerUtil();
-        blinker();
+        if (sec == 0) {
+          timerUtil();
+          blinker();
+        }
       }
     }, 1000);
 }
@@ -79,16 +81,21 @@ function timerUtil() {
   if (blink) {
     clearInterval(blink);
     blink = false;
+    showTimer = true;
+    document.getElementById("time").style.visibility = "visible";
   }
 }
 
 function blinker() {
-  document.getElementById("time").style.visibility = "hidden";
-  setTimeout(function () { document.getElementById("time").style.visibility = "visible" }, 500);
   blink = setInterval(function () {
-    document.getElementById("time").style.visibility = "hidden";
-    setTimeout(function () { document.getElementById("time").style.visibility = "visible" }, 500);
-  }, 1000);
+    if (showTimer) {
+      showTimer = false;
+      document.getElementById("time").style.visibility = "hidden";
+    } else {
+      showTimer = true;
+      document.getElementById("time").style.visibility = "visible";
+    }
+  }, 500);
 }
 
 function pad(n, width, z) {

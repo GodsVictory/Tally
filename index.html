@@ -59,15 +59,8 @@ function startTimer() {
     }, 1000);
 }
 
-function resetTimer() {
-  sec = setSec;
-  timerUtil();
-  setTime();
-}
-
-function clearTimer() {
-  sec = 0;
-  setSec = 0;
+function resetTimer(x) {
+  sec = x;
   timerUtil();
   setTime();
 }
@@ -158,7 +151,7 @@ body {
 <body onresize="resize()">
 <div id="timer">
   <div id="time" class="number"><span id="minute" onClick="minute()">0</span>:<span id="second" onClick="second()">00</span></div>
-  <div class="text"><span onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer()">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="clearTimer()">Clear</span></div>
+  <div class="text"><span onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(setSec)">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(0)">Clear</span></div>
 </div>
 <hr style="position:absolute;line-height:0;top:50%;width:100%;" />
 <div id="tally">

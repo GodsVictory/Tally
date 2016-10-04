@@ -8,9 +8,7 @@
 <link href='https://fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 <script>
 var count = 0;
-var min = 0;
 var sec = 0;
-var setMin = 0;
 var setSec = 0;
 var timer = false;
 var blink = false;
@@ -26,71 +24,71 @@ function reset() {
 
 function minute() {
   if (!timer) {
-    document.getElementById("minute").innerHTML = ++min;
-    setMin = min;
+    sec += 60;
+    setSec = sec;
+    setTime();
+    timerUtil();
   }
 }
 
 function second() {
   if (!timer) {
-    document.getElementById("second").innerHTML = pad(++sec, 2);
+    sec++;
     setSec = sec;
+    setTime();
+    timerUtil();
   }
 }
 
+function setTime() {
+  document.getElementById("minute").innerHTML = Math.floor(sec / 60);
+  document.getElementById("second").innerHTML = pad(sec % 60, 2);
+}
+
 function startTimer() {
-  if (sec + min > 0)
+  if (sec > 0)
     timer = setInterval(function () {
-      if (sec != 0)
-        document.getElementById("second").innerHTML = pad(--sec, 2);
-      else
-        if (min != 0) {
-          document.getElementById("minute").innerHTML = --min;
-          sec = 59;
-          document.getElementById("second").innerHTML = sec;
-        } else {
-          clearInterval(timer);
-          timer = false;
-          document.getElementById("time").style.visibility = "hidden";
-          setTimeout(function () {document.getElementById("time").style.visibility = "visible"},500);
-          blink = setInterval(function () {
-            document.getElementById("time").style.visibility = "hidden";
-            setTimeout(function () {document.getElementById("time").style.visibility = "visible"},500);
-          }, 1000);
-        }
+      if (sec != 0) {
+        sec--;
+        setTime();
+      } else {
+        timerUtil();
+        blinker();
+      }
     }, 1000);
 }
 
 function resetTimer() {
+  sec = setSec;
+  timerUtil();
+  setTime();
+}
+
+function clearTimer() {
+  sec = 0;
+  setSec = 0;
+  timerUtil();
+  setTime();
+}
+
+function timerUtil() {
   if (timer) {
     clearInterval(timer);
     timer = false;
   }
-  min = setMin;
-  sec = setSec;
-  document.getElementById("minute").innerHTML = min;
-  document.getElementById("second").innerHTML = pad(sec, 2);
   if (blink) {
     clearInterval(blink);
     blink = false;
   }
 }
 
-function clearTimer() {
-  if (timer) {
-    clearInterval(timer);
-    timer = false;
-  }
-  min = 0;
-  sec = 0;
-  setMin = 0;
-  setSec = 0;
-  document.getElementById("minute").innerHTML = 0;
-  document.getElementById("second").innerHTML = "00";
-  if (blink) {
-    clearInterval(blink);
-    blink = false;
-  }
+function blinker() {
+  document.getElementById("time").style.visibility = "hidden";
+  setTimeout(function () { document.getElementById("time").style.visibility = "visible" }, 500);
+  blink = setInterval(function () {
+    document.getElementById("time").style.visibility = "hidden";
+    setTimeout(function () { document.getElementById("time").style.visibility = "visible" }, 500);
+  }, 1000);
 }
 
 function pad(n, width, z) {
@@ -106,11 +104,11 @@ window.onload = function () {
 function resize() {
   var text = document.getElementsByClassName('text');
   for (var i = 0; i < text.length; ++i)
-    text[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .025;
+    text[i].style.fontSize = document.body.clientHeight * .05;
     
   var number = document.getElementsByClassName('number');
   for (var i = 0; i < number.length; ++i) {
-    number[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .15;
+    number[i].style.fontSize = document.body.clientHeight * .25;
     number[i].style.lineHeight = document.body.clientHeight / 2 + "px";
   }
 }

@@ -12,6 +12,7 @@ var setSec = 0;
 var timer = false;
 var blink = false;
 var showTimer = true;
+var stop = false;
 
 function counter() {
   document.getElementById("counter").innerHTML = ++count;
@@ -46,17 +47,28 @@ function setTime() {
 }
 
 function startTimer() {
-  if (sec > 0)
-    timer = setInterval(function () {
-      if (sec != 0) {
-        sec--;
-        setTime();
-        if (sec == 0) {
-          timerUtil();
-          blinker();
+  if (stop) {
+    timerUtil();
+  } else {
+    stop = true;
+    document.getElementById("start").innerHTML = "Stop";
+    if (setSec > 0)
+      timer = setInterval(function () {
+        if (sec != 0) {
+          sec--;
+          setTime();
+          if (sec == 0) {
+            timerUtil();
+            blinker();
+          }
         }
-      }
-    }, 1000);
+      }, 1000);
+    else
+      timer = setInterval(function () {
+        sec++;
+        setTime();
+      }, 1000);
+  }
 }
 
 function resetTimer(x) {
@@ -66,6 +78,8 @@ function resetTimer(x) {
 }
 
 function timerUtil() {
+  stop = false;
+  document.getElementById("start").innerHTML = "Start";
   if (timer) {
     clearInterval(timer);
     timer = false;
@@ -151,7 +165,7 @@ body {
 <body onresize="resize()">
 <div id="timer">
   <div id="time" class="number"><span id="minute" onClick="minute()">0</span>:<span id="second" onClick="second()">00</span></div>
-  <div class="text"><span onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(setSec)">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(0)">Clear</span></div>
+  <div class="text"><span id="start" onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(setSec)">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(0)">Clear</span></div>
 </div>
 <hr style="position:absolute;line-height:0;top:50%;width:100%;" />
 <div id="tally">

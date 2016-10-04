@@ -112,7 +112,6 @@ window.onload = function () {
 }
 
 function resize() {
-  if ( document.readyState !== 'complete' ) return;
   var text = document.getElementsByClassName('text');
   for (var i = 0; i < text.length; ++i)
     text[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .025;

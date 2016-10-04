@@ -11,8 +11,8 @@ var sec = 0;
 var setSec = 0;
 var timer = false;
 var blink = false;
-var showTimer = true;
-var stop = false;
+var blinkOn = true;
+var stopwatch = false;
 
 function counter() {
   document.getElementById("counter").innerHTML = ++count;
@@ -27,8 +27,8 @@ function minute() {
   if (!timer) {
     sec += 60;
     setSec = sec;
-    setTime();
-    timerUtil();
+    setTime(sec);
+    stopwatch = false;
   }
 }
 
@@ -36,72 +36,75 @@ function second() {
   if (!timer) {
     sec++;
     setSec = sec;
-    setTime();
-    timerUtil();
+    setTime(sec);
+    stopwatch = false;
   }
 }
 
-function setTime() {
+function setTime(x) {
+  sec = x;
   document.getElementById("minute").innerHTML = Math.floor(sec / 60);
   document.getElementById("second").innerHTML = pad(sec % 60, 2);
 }
 
-function startTimer() {
-  if (stop) {
-    timerUtil();
-  } else {
-    stop = true;
-    document.getElementById("start").innerHTML = "Stop";
-    if (setSec > 0)
-      timer = setInterval(function () {
-        if (sec != 0) {
-          sec--;
-          setTime();
-          if (sec == 0) {
-            timerUtil();
-            blinker();
-          }
-        }
-      }, 1000);
-    else
-      timer = setInterval(function () {
-        sec++;
-        setTime();
-      }, 1000);
-  }
-}
-
 function resetTimer(x) {
-  sec = x;
-  timerUtil();
-  setTime();
-}
-
-function timerUtil() {
-  stop = false;
-  document.getElementById("start").innerHTML = "Start";
   if (timer) {
+    blinker(false);
+    document.getElementById("start").innerHTML = "Start";
     clearInterval(timer);
     timer = false;
   }
-  if (blink) {
-    clearInterval(blink);
-    blink = false;
-    showTimer = true;
-    document.getElementById("time").style.visibility = "visible";
+  setTime(x);
+  if (x > 0)
+    stopwatch = false;
+}
+
+function startTimer() {
+  if (timer) {
+    blinker(false);
+    document.getElementById("start").innerHTML = "Start";
+    clearInterval(timer);
+    timer = false;
+  } else {
+    blinker(false);
+    document.getElementById("start").innerHTML = "Stop";
+    if (sec == 0)
+      stopwatch = true;
+    if (stopwatch) {
+      timer = setInterval(function () {
+        setTime(++sec);
+      }, 1000);
+    } else
+      timer = setInterval(function () {
+        if (sec != 0) {
+          setTime(--sec);
+          if (sec == 0) {
+            clearInterval(timer);
+            blinker(true);
+          }
+        }
+      }, 1000);
   }
 }
 
-function blinker() {
-  blink = setInterval(function () {
-    if (showTimer) {
-      showTimer = false;
-      document.getElementById("time").style.visibility = "hidden";
-    } else {
-      showTimer = true;
+function blinker(x) {
+  if (x)
+    blink = setInterval(function () {
+      if (blinkOn) {
+        blinkOn = false;
+        document.getElementById("time").style.visibility = "hidden";
+      } else {
+        blinkOn = true;
+        document.getElementById("time").style.visibility = "visible";
+      }
+    }, 500);
+  else
+    if (blink) {
+      clearInterval(blink);
+      blink = false;
+      blinkOn = true;
       document.getElementById("time").style.visibility = "visible";
     }
-  }, 500);
 }
 
 function pad(n, width, z) {

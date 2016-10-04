@@ -100,15 +100,7 @@ function pad(n, width, z) {
 }
 
 window.onload = function () {
-  var text = document.getElementsByClassName('text');
-  for (var i = 0; i < text.length; ++i)
-    text[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .025;
-    
-  var number = document.getElementsByClassName('number');
-  for (var i = 0; i < number.length; ++i) {
-    number[i].style.fontSize = (document.body.clientWidth + document.body.clientHeight) * .15;
-    number[i].style.lineHeight = document.body.clientHeight / 2 + "px";
-  }
+  resize();
 }
 
 function resize() {
@@ -141,10 +133,6 @@ body {
   margin:0px;
   text-align:center;
 }
-p {
-  padding:0px;
-  margin:0px;
-}
 #tally {
   position:absolute;
   width:100%;
@@ -156,8 +144,6 @@ p {
   width:100%;
   height:50%;
 }
-.number {
-}
 .text {
   position:absolute;
   bottom:0px;
@@ -168,12 +154,12 @@ p {
 <body onresize="resize()">
 <div id="timer">
   <div id="time" class="number"><span id="minute" onClick="minute()">0</span>:<span id="second" onClick="second()">00</span></div>
-  <div class="text"><span id="start" onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="resetTimer" onClick="resetTimer()">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="clear" onClick="clearTimer()">Clear</span></div>
+  <div class="text"><span onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer()">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="clearTimer()">Clear</span></div>
 </div>
 <hr style="position:absolute;line-height:0;top:50%;width:100%;" />
 <div id="tally">
   <div id="counter" onClick="counter()" class="number">0</div>
-  <div id="reset" onClick="reset()" class="text">Reset</div>
+  <div onClick="reset()" class="text">Reset</div>
 </div>
 </body>
 </html>

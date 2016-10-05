@@ -32,6 +32,15 @@ function minute() {
   }
 }
 
+function tenSec() {
+  if (!timer) {
+    sec += 10;
+    setSec = sec;
+    setTime(sec);
+    stopwatch = false;
+  }
+}
+
 function second() {
   if (!timer) {
     sec++;
@@ -44,7 +53,8 @@ function second() {
 function setTime(x) {
   sec = x;
   document.getElementById("minute").innerHTML = Math.floor(sec / 60);
-  document.getElementById("second").innerHTML = pad(sec % 60, 2);
+  document.getElementById("tenSec").innerHTML = Math.floor(sec % 60 / 10);
+  document.getElementById("second").innerHTML = sec % 60 % 10;
 }
 
 function resetTimer(x) {
@@ -167,7 +177,7 @@ body {
 </head>
 <body onresize="resize()">
 <div id="timer">
-  <div id="time" class="number"><span id="minute" onClick="minute()">0</span>:<span id="second" onClick="second()">00</span></div>
+  <div id="time" class="number"><span id="minute" onClick="minute()">0</span>:<span id="tenSec" onClick="tenSec()">0</span><span id="second" onClick="second()">0</span></div>
   <div class="text"><span id="start" onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(setSec)">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(0)">Clear</span></div>
 </div>
 <hr style="position:absolute;line-height:0;top:50%;width:100%;" />

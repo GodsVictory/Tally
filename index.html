@@ -13,6 +13,8 @@ var timer = false;
 var blink = false;
 var blinkOn = true;
 var stopwatch = false;
+var start = 0;
+var time = 0;
 
 function counter() {
   document.getElementById("counter").innerHTML = ++count;
@@ -61,7 +63,7 @@ function resetTimer(x) {
   if (timer) {
     blinker(false);
     document.getElementById("start").innerHTML = "Start";
-    clearInterval(timer);
+    clearTimeout(timer);
     timer = false;
   }
   setTime(x);
@@ -73,7 +75,7 @@ function startTimer() {
   if (timer) {
     blinker(false);
     document.getElementById("start").innerHTML = "Start";
-    clearInterval(timer);
+    clearTimeout(timer);
     timer = false;
   } else {
     blinker(false);
@@ -81,19 +83,32 @@ function startTimer() {
     if (sec == 0)
       stopwatch = true;
     if (stopwatch) {
-      timer = setInterval(function () {
-        setTime(++sec);
-      }, 1000);
+      start = performance.now();
+      time = 0;
+      timer = setTimeout(clock, 1000);
+    } else {
+      start = performance.now();
+      time = 0;
+      timer = setTimeout(clock, 1000);
+    }
+
+  }
+}
+
+function clock() {
+  time += 1000;
+  var diff = performance.now() - start - time;
+  
+  if (stopwatch) {
+    setTime(++sec);
+    timer = setTimeout(clock, (1000 - diff));
+  }  else {
+    setTime(--sec);
+    if (sec == 0) {
+      clearTimeout(timer);
+      blinker(true);
     } else
-      timer = setInterval(function () {
-        if (sec != 0) {
-          setTime(--sec);
-          if (sec == 0) {
-            clearInterval(timer);
-            blinker(true);
-          }
-        }
-      }, 1000);
+      timer = setTimeout(clock, (1000 - diff));
   }
 }
 

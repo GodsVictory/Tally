@@ -14,6 +14,7 @@ var blink = false;
 var blinkOn = true;
 var stopwatch = false;
 var start = 0;
+var curSec = 0;
 
 function counter() {
   document.getElementById("counter").innerHTML = ++count;
@@ -71,6 +72,7 @@ function resetTimer(x) {
 }
 
 function startTimer() {
+  curSec = sec;
   if (timer) {
     blinker(false);
     document.getElementById("start").innerHTML = "Start";
@@ -87,18 +89,18 @@ function startTimer() {
 }
 
 function clock() {
-  var diff = performance.now() - start - (Math.round((performance.now() - start) / 1000) * 1000);
-  if (stopwatch) {
-    setTime(++sec);
-    timer = setTimeout(clock, (1000 - diff));
-  }  else {
-    setTime(--sec);
+  if (stopwatch)
+    var time = Math.round((performance.now() - start) / 1000);
+  else
     if (sec == 0) {
       clearTimeout(timer);
       blinker(true);
+      return;
     } else
-      timer = setTimeout(clock, (1000 - diff));
-  }
+      var time = Math.round((performance.now() - start) / 1000) * -1;
+  sec = curSec + time;
+  setTime(sec);
+  timer = setTimeout(clock, (1000 - (performance.now() - start - (Math.round((performance.now() - start) / 1000) * 1000))));
 }
 
 function blinker(x) {

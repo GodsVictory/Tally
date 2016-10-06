@@ -14,7 +14,6 @@ var blink = false;
 var blinkOn = true;
 var stopwatch = false;
 var start = 0;
-var time = 0;
 
 function counter() {
   document.getElementById("counter").innerHTML = ++count;
@@ -82,23 +81,13 @@ function startTimer() {
     document.getElementById("start").innerHTML = "Stop";
     if (sec == 0)
       stopwatch = true;
-    if (stopwatch) {
-      start = performance.now();
-      time = 0;
-      timer = setTimeout(clock, 1000);
-    } else {
-      start = performance.now();
-      time = 0;
-      timer = setTimeout(clock, 1000);
-    }
-
+    start = performance.now();
+    timer = setTimeout(clock, 1000);
   }
 }
 
 function clock() {
-  time += 1000;
-  var diff = performance.now() - start - time;
-  
+  var diff = performance.now() - start - (Math.round((performance.now() - start) / 1000) * 1000);
   if (stopwatch) {
     setTime(++sec);
     timer = setTimeout(clock, (1000 - diff));

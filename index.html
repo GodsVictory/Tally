@@ -10,10 +10,7 @@ var count = 0;
 var sec = 0;
 var setSec = 0;
 var timer = false;
-var blink = false;
-var blinkOn = true;
-var stopwatch = false;
-var start = 0;
+var stopwatch = true;
 var curSec = 0;
 
 function counter() {
@@ -25,85 +22,64 @@ function reset() {
   document.getElementById("counter").innerHTML = count;
 }
 
-function minute() {
-  if (!timer) {
-    sec += 60;
-    setSec = sec;
-    setTime(sec);
-    stopwatch = false;
-  }
+function setClock(x) {
+  if (timer) return;
+  sec = Math.floor(sec / 1000) * 1000 + x * 1000;
+  setSec = sec;
+  updateClock(sec);
+  stopwatch = false;
 }
 
-function tenSec() {
-  if (!timer) {
-    sec += 10;
-    setSec = sec;
-    setTime(sec);
-    stopwatch = false;
-  }
-}
-
-function second() {
-  if (!timer) {
-    sec++;
-    setSec = sec;
-    setTime(sec);
-    stopwatch = false;
-  }
-}
-
-function setTime(x) {
+function resetClock(x) {
+  clear(x);
   sec = x;
-  document.getElementById("minute").innerHTML = Math.floor(sec / 60);
-  document.getElementById("tenSec").innerHTML = Math.floor(sec % 60 / 10);
-  document.getElementById("second").innerHTML = sec % 60 % 10;
+  updateClock(x);
+  if (x > 0) stopwatch = false;
 }
 
-function resetTimer(x) {
-  if (timer) {
-    blinker(false);
-    document.getElementById("start").innerHTML = "Start";
-    clearTimeout(timer);
-    timer = false;
-  }
-  setTime(x);
-  if (x > 0)
-    stopwatch = false;
+function updateClock(x) {
+  var clock = Math.floor(x / 1000);
+  document.getElementById("minute").innerHTML = Math.floor(clock / 60);
+  document.getElementById("tenSec").innerHTML = Math.floor(clock % 60 / 10);
+  document.getElementById("second").innerHTML = clock % 60 % 10;
 }
 
+function clear(x) {
+  clearInterval(timer);
+  curSec = x;
+  if (x == 0) stopwatch = true;
+  timer = false;
+  blinker(false);
+  document.getElementById("start").innerHTML = "Start";
+}
+
+var start;
 function startTimer() {
-  curSec = sec;
-  if (timer) {
-    blinker(false);
-    document.getElementById("start").innerHTML = "Start";
-    clearTimeout(timer);
-    timer = false;
-  } else {
-    blinker(false);
+  if (timer) clear(sec);
+  else {
+    clear(sec);
     document.getElementById("start").innerHTML = "Stop";
-    if (sec == 0)
-      stopwatch = true;
     start = Date.now();
-    timer = setTimeout(clock, 1000);
+    timer = setInterval(function() {
+      if (stopwatch) var time = Date.now() - start;
+      else
+        if (Math.round(sec / 1000) == 0) {
+          resetClock(0);
+          blinker(true);
+          return;
+        } else var time = (Date.now() - start) * -1;
+      sec = curSec + time;
+      updateClock(sec);
+    },10);
   }
 }
-function clock() {
-  if (stopwatch)
-    var time = Math.round((Date.now() - start) / 1000);
-  else
-    if (sec == 0) {
-      clearTimeout(timer);
-      blinker(true);
-      return;
-    } else
-      var time = Math.round((Date.now() - start) / 1000) * -1;
-  sec = curSec + time;
-  setTime(sec);
-  timer = setTimeout(clock, 1000 - (Date.now() - start - (Math.round((Date.now() - start) / 1000) * 1000)));
-}
 
+var blink = false;
+var blinkOn = true;
 function blinker(x) {
-  if (x)
+  if (x) {
+    blinkOn = false;
+    document.getElementById("time").style.visibility = "hidden";
     blink = setInterval(function () {
       if (blinkOn) {
         blinkOn = false;
@@ -113,19 +89,13 @@ function blinker(x) {
         document.getElementById("time").style.visibility = "visible";
       }
     }, 500);
-  else
+  } else
     if (blink) {
       clearInterval(blink);
       blink = false;
       blinkOn = true;
       document.getElementById("time").style.visibility = "visible";
     }
-}
-
-function pad(n, width, z) {
-  z = z || '0';
-  n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
 window.onload = function () {
@@ -182,8 +152,8 @@ body {
 </head>
 <body onresize="resize()">
 <div id="timer">
-  <div id="time" class="number"><span id="minute" onClick="minute()">0</span>:<span id="tenSec" onClick="tenSec()">0</span><span id="second" onClick="second()">0</span></div>
-  <div class="text"><span id="start" onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(setSec)">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetTimer(0)">Clear</span></div>
+  <div id="time" class="number"><span id="minute" onClick="setClock(60)">0</span>:<span id="tenSec" onClick="setClock(10)">0</span><span id="second" onClick="setClock(1)">0</span></div>
+  <div class="text"><span id="start" onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetClock(setSec)">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetClock(0)">Clear</span></div>
 </div>
 <hr style="position:absolute;line-height:0;top:50%;width:100%;" />
 <div id="tally">

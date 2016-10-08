@@ -39,9 +39,10 @@ function resetClock(x) {
 
 function updateClock(x) {
   var clock = Math.floor(x / 1000);
-  document.getElementById("minute").innerHTML = Math.floor(clock / 60);
-  document.getElementById("tenSec").innerHTML = Math.floor(clock % 60 / 10);
-  document.getElementById("second").innerHTML = clock % 60 % 10;
+  document.getElementById("tenMin").innerHTML = Math.floor(clock / 600);
+  document.getElementById("minute").innerHTML = Math.floor(clock % 600 / 60);
+  document.getElementById("tenSec").innerHTML = Math.floor(clock % 600 % 60 / 10);
+  document.getElementById("second").innerHTML = clock % 600 % 60 % 10;
 }
 
 function clear(x) {
@@ -152,7 +153,7 @@ body {
 </head>
 <body onresize="resize()">
 <div id="timer">
-  <div id="time" class="number"><span id="minute" onClick="setClock(60)">0</span>:<span id="tenSec" onClick="setClock(10)">0</span><span id="second" onClick="setClock(1)">0</span></div>
+  <div id="time" class="number"><span id="tenMin" onClick="setClock(600)">0</span><span id="minute" onClick="setClock(60)">0</span>:<span id="tenSec" onClick="setClock(10)">0</span><span id="second" onClick="setClock(1)">0</span></div>
   <div class="text"><span id="start" onClick="startTimer()">Start</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetClock(setSec)">Reset</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span onClick="resetClock(0)">Clear</span></div>
 </div>
 <hr style="position:absolute;line-height:0;top:50%;width:100%;" />
